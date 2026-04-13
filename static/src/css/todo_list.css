@@ -1,0 +1,105 @@
+/* Draft = Grey */
+.o_statusbar_status button[data-value="draft"] {
+    color: #6c757d !important;
+    border-color: #6c757d !important;
+}
+
+/* In Progress = Yellow */
+.o_statusbar_status button[data-value="in_progress"] {
+    color: #f0a500 !important;
+    border-color: #f0a500 !important;
+}
+.o_statusbar_status button[data-value="in_progress"].o_arrow_button_current {
+    background-color: #f0a500 !important;
+    color: white !important;
+}
+
+/* Complete = Green */
+.o_statusbar_status button[data-value="complete"] {
+    color: #28a745 !important;
+    border-color: #28a745 !important;
+}
+.o_statusbar_status button[data-value="complete"].o_arrow_button_current {
+    background-color: #28a745 !important;
+    color: white !important;
+}
+
+/* Draft current = Grey */
+.o_statusbar_status button[data-value="draft"].o_arrow_button_current {
+    background-color: #6c757d !important;
+    color: white !important;
+}
+
+/* Darker checkbox border */
+.o_field_boolean .o_checkbox input[type="checkbox"] + span {
+    border: 5px solid #030405 !important;
+    border-radius: 3px;
+}
+
+/* Checkbox when checked */
+.o_field_boolean .o_checkbox input[type="checkbox"]:checked + span {
+    border-color: #017e84 !important;
+    background-color: #017e84 !important;
+}
+
+/* Radio button priority styling */
+.o_field_radio .o_radio_item {
+    display: inline-flex;
+    align-items: center;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.o_field_radio .o_radio_item input[type="radio"] {
+    margin-right: 5px;
+    cursor: pointer;
+}
+
+/* Low = grey */
+.o_field_radio .o_radio_item:nth-child(1) label {
+    color: #6c757d;
+    font-weight: 500;
+}
+
+/* Medium = orange */
+.o_field_radio .o_radio_item:nth-child(2) label {
+    color: #f0a500;
+    font-weight: 500;
+}
+
+/* High = red */
+.o_field_radio .o_radio_item:nth-child(3) label {
+    color: #dc3545;
+    font-weight: 500;
+}
+
+/* Fix radio button alignment */
+.o_field_radio {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.o_field_radio .o_radio_item {
+    display: inline-flex;
+    align-items: center;
+    margin-right: 10px;
+    cursor: pointer;
+    vertical-align: middle;
+    line-height: 1;
+}
+
+.o_field_radio .o_radio_item label {
+    margin-bottom: 0 !important;
+    vertical-align: middle;
+}
+
+.o_field_radio .o_radio_item input[type="radio"] {
+    margin-right: 4px;
+    vertical-align: middle;
+}
+
+/* Move priority radio buttons down slightly */
+.o_field_radio {
+    margin-top: 4px;
+}

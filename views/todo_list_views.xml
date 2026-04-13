@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Search View -->
+    <record id="view_todo_list_search" model="ir.ui.view">
+        <field name="name">todo.list.search</field>
+        <field name="model">todo.list</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" string="Title"/>
+                <field name="tag_ids" string="Tags"/>
+                <filter name="filter_draft" string="Draft" domain="[('state','=','draft')]"/>
+                <filter name="filter_in_progress" string="In Progress" domain="[('state','=','in_progress')]"/>
+                <filter name="filter_complete" string="Complete" domain="[('state','=','complete')]"/>
+                <separator/>
+                <filter name="sort_priority" string="Sort by Priority" domain="[]" context="{'orderby': 'priority desc'}"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_state" string="Status" context="{'group_by': 'state'}"/>
+                    <filter name="group_priority" string="Priority" context="{'group_by': 'priority'}"/>
+                </group>
+                <searchpanel>
+                    <field name="state" string="Status" icon="fa-tasks"/>
+                    <field name="priority" string="Priority" icon="fa-flag"/>
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+
+    <!-- Todo Tag List View -->
+    <record id="view_todo_tag_list" model="ir.ui.view">
+        <field name="name">todo.tag.list</field>
+        <field name="model">todo.tag</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name" string="Tag Name"/>
+                <field name="color" widget="color_picker"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Todo Tag Form View -->
+    <record id="view_todo_tag_form" model="ir.ui.view">
+        <field name="name">todo.tag.form</field>
+        <field name="model">todo.tag</field>
+        <field name="arch" type="xml">
+            <form string="Tag">
+                <sheet>
+                    <group>
+                        <field name="name" string="Tag Name"/>
+                        <field name="color" widget="color_picker"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Todo List Form View -->
+    <record id="view_todo_list_form" model="ir.ui.view">
+        <field name="name">todo.list.form</field>
+        <field name="model">todo.list</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_start"
+                        string="Progress"
+                        type="object"
+                        invisible="state != 'draft'"
+                        class="btn-primary"/>
+                    <button name="action_complete"
+                        string="Done"
+                        type="object"
+                        invisible="state != 'in_progress' or not all_items_complete"
+                        class="btn-success"/>
+                    <field name="state"
+                        widget="statusbar"
+                        statusbar_visible="draft,in_progress,complete"
+                        clickable="1"/>
+                </header>
+                <sheet>
+                    <field name="all_items_complete" invisible="1"/>
+                    <div class="oe_title">
+                        <label for="name" string="Title*"/>
+                        <h1>
+                            <field name="name"
+                                placeholder="Enter Todo List title..."
+                                readonly="state == 'complete'"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Details">
+                            <field name="tag_ids"
+                                widget="many2many_tags"
+                                options="{'color_field': 'color', 'no_create_edit': False}"
+                                placeholder="Select tags..."
+                                readonly="state == 'complete'"/>
+                            <field name="priority"
+                                widget="radio"
+                                readonly="state == 'complete'"
+                                string="Priority"/>
+                        </group>
+                        <group string="Schedule">
+                            <field name="start_date"
+                                required="1"
+                                readonly="state == 'complete'"
+                                string="Start Date*"/>
+                            <field name="end_date"
+                                required="1"
+                                options="{'datepicker': {'minDate': 'start_date'}}"
+                                readonly="state == 'complete'"
+                                string="End Date*"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="List" name="list">
+                            <field name="item_ids"
+                                readonly="state == 'complete'">
+                                <list editable="bottom">
+                                    <field name="name" string="Item Name"/>
+                                    <field name="description" string="Description"/>
+                                    <field name="is_complete"
+                                        string="Is Complete"
+                                        column_invisible="parent.state != 'in_progress'"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Attendee" name="attendee">
+                            <field name="attendee_ids"
+                                readonly="state == 'complete'">
+                                <list editable="bottom">
+                                    <field name="user_id" string="Attendee"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Todo List List View -->
+    <record id="view_todo_list_tree" model="ir.ui.view">
+        <field name="name">todo.list.list</field>
+        <field name="model">todo.list</field>
+        <field name="arch" type="xml">
+            <list
+                decoration-success="state == 'complete'"
+                decoration-info="state == 'in_progress'"
+                decoration-muted="state == 'draft'">
+                <field name="name" string="Title"/>
+                <field name="start_date"/>
+                <field name="end_date"/>
+                <field name="tag_ids" widget="many2many_tags"/>
+                <field name="priority" widget="badge"
+                    decoration-danger="priority == '2'"
+                    decoration-warning="priority == '1'"
+                    decoration-muted="priority == '0'"/>
+                <field name="state" widget="badge"
+                    decoration-success="state == 'complete'"
+                    decoration-warning="state == 'in_progress'"
+                    decoration-muted="state == 'draft'"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Actions -->
+    <record id="action_todo_list_all" model="ir.actions.act_window">
+        <field name="name">Todo List</field>
+        <field name="res_model">todo.list</field>
+        <field name="view_mode">list,form</field>
+        <field name="path">todo-list</field>
+    </record>
+    <record id="action_todo_list_incomplete" model="ir.actions.act_window">
+        <field name="name">Todo List Incomplete</field>
+        <field name="res_model">todo.list</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('state', '!=', 'complete')]</field>
+    </record>
+    <record id="action_todo_list_complete" model="ir.actions.act_window">
+        <field name="name">Todo List Complete</field>
+        <field name="res_model">todo.list</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('state', '=', 'complete')]</field>
+    </record>
+
+    <!-- Todo Tag Action -->
+    <record id="action_todo_tag" model="ir.actions.act_window">
+        <field name="name">Tags</field>
+        <field name="res_model">todo.tag</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- Menus -->
+    <menuitem id="menu_todo_root" name="Todo List" sequence="10"/>
+    <menuitem id="menu_todo_all" name="Todo List" parent="menu_todo_root" action="action_todo_list_all" sequence="1"/>
+    <menuitem id="menu_todo_incomplete" name="Todo List Incomplete" parent="menu_todo_root" action="action_todo_list_incomplete" sequence="2"/>
+    <menuitem id="menu_todo_complete" name="Todo List Complete" parent="menu_todo_root" action="action_todo_list_complete" sequence="3"/>
+
+</odoo>
